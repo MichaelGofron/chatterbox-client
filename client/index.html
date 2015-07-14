@@ -15,8 +15,14 @@
   <body>
     <div id="main">
       <h1>chatterbox</h1>
-      <!-- Your HTML goes here! -->
+      <form id="message-form">
+        Username: <input type="text" name="username"><br>
+        Message: <input type="text" name="text">
+      </form>
+      <button type="submit" form="message-form" value="Submit">Submit</button>
+      <select id="rooms"></select>
       <button id="refresh">Refresh</button>
+      <!-- Your HTML goes here! -->
     </div>
   </body>
 </html>
