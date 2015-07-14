@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <title>chatterbox</title>
     <link rel="stylesheet" href="styles/styles.css">
+    <link href='http://fonts.googleapis.com/css?family=Lato:100,300,400' rel='stylesheet' type='text/css'>
 
     <!-- dependencies -->
     <script src="bower_components/jquery/jquery.min.js"></script>
@@ -14,14 +15,15 @@
   </head>
   <body>
     <div id="main">
-      <h1>chatterbox</h1>
+      <h1 id="logo">chatterbox</h1>
       <form id="message-form">
-        Username: <input type="text" name="username"><br>
-        Message: <input type="text" name="text">
+        <div class="form-content">Username:  <input type="text" name="username"></div>
+        <div class="form-content">Room Name: <input type="text" name="roomname"></div>
+        <div class="form-content">Message:   <input type="text" name="text"></div>
+        <div class="form-content"><button type="submit" form="message-form" value="Submit">Submit</button></div>
       </form>
-      <button type="submit" form="message-form" value="Submit">Submit</button>
-      <select id="rooms"></select>
-      <button id="refresh">Refresh</button>
+      <div id="room-selection">Select a room: <select id="rooms"></select></div>
+      <div id="refresh-div"><button id="refresh">Refresh</button></div>
       <!-- Your HTML goes here! -->
     </div>
   </body>

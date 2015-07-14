@@ -3,7 +3,7 @@ var app = {};
 app.server = "https://api.parse.com/1/classes/chatterbox";
 
 app.init = function(){
-
+  this.friends = {};
 };
 
 app.send = function(message){
@@ -52,14 +52,25 @@ app._displayMessages = function(messages, roomName) {
   _.each(messages,function(msg){
     if (!roomName || msg.roomname === roomName){
       var $msg = $("<div class='message'></div>");
-      var $username = $("<div class='username'> username: " + msg.username + "</div>");
+      var $username = $("<div class='username'>" + msg.username + "</div>");
       var $roomname = $("<div class='roomname'> room name: " + msg.roomname + "</div>");
-      var $createdAt = $("<div class='created-at'> created at: " + msg.createdAt+ "</div>");
-      var $updatedAt = $("<div class='updated-at'> updated at: " + msg.updatedAt+ "</div>");
-      var $text = $("<div class='msg-body'>" + msg.text + "</div>");
-      $msg.append($username).append($roomname).append($createdAt).append($updatedAt).append($text);
+      //var $createdAt = $("<div class='created-at'> created at: " + msg.createdAt+ "</div>");
+      //var $updatedAt = $("<div class='updated-at'> updated at: " + msg.updatedAt+ "</div>");
+      if (app.friends[msg.username]) {
+        var $text = $("<div class='msg-body friend-msg-body'>" + msg.text + "</div>");
+      } else {
+        var $text = $("<div class='msg-body'>" + msg.text + "</div>");
+      }
+      
+      //$msg.append($username).append($roomname).append($createdAt).append($updatedAt).append($text);
+      
+
+      $msg.append($username).append($roomname).append($text);
       $chats.append($msg);
     }
+  });
+  $('.username').on("click", function(e) {
+    app.friends[$(this).text()] = true;
   });
 };
 
@@ -77,13 +88,7 @@ app.fetch = function(roomName) {
     // data: JSON.stringify(message),
     // contentType: 'application/json',
     success: function (data) {
-      var sanitizedMessages = _.map(data.results, function(msg) {
-        var sanitizedMsg = {};
-        for (var key in msg) {
-          sanitizedMsg[key] = sanitize(msg[key]);
-        }
-        return sanitizedMsg;
-      });
+      var sanitizedMessages = sanitizeMessages(data.results);
       // var sanitizedMessages = data.results;
       var roomNames = app._getRoomNames(sanitizedMessages);
       app._displayRoomNames(roomNames, roomName);
@@ -122,10 +127,11 @@ $(document).ready(function(){
     });
 
     app.addMessage(message);
-
   });
 
+  app.init();
   app.fetch();
+
 
 
   // setInterval(function() {
@@ -143,4 +149,15 @@ var sanitize = function(input) {
          replace(/<![\s\S]*?--[ \t\n\r]*>/gi, '');
   }
   return output;
+};
+
+var sanitizeMessages = function(messages){
+  var sanitizedMessages = _.map(messages, function(msg) {
+    var sanitizedMsg = {};
+    for (var key in msg) {
+      sanitizedMsg[key] = sanitize(msg[key]);
+    }
+    return sanitizedMsg;
+  });
+  return sanitizedMessages;
 };
